@@ -7,16 +7,47 @@
 //
 
 import UIKit
+import Parse
 
 class LoginViewController: UIViewController {
 
+    
+    @IBOutlet weak var usernameField: UITextField!
+    @IBOutlet weak var passwordField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
     
-
+    @IBAction func onSignIn(_ sender: AnyObject) {
+        PFUser.logInWithUsername(inBackground: usernameField.text!, password: passwordField.text!) { (user: PFUser?, error: Error?) in
+            if user != nil {
+                print("You're logged in!")
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+            }
+        }
+                // display view controller that needs to shown after successful login
+            }
+    @IBAction func onSignUp(_ sender: AnyObject) {
+        let newUser = PFUser()
+        
+        newUser.username = usernameField.text
+        newUser.password = passwordField.text
+        newUser.signUpInBackground { (success: Bool, error: Error?) in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                print("Yay, created a user!")
+                self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                // manually segue to logged in view
+            }
+        }
+        }
+        
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -27,4 +58,4 @@ class LoginViewController: UIViewController {
     }
     */
 
-}
+
